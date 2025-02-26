@@ -1,0 +1,104 @@
+<FlatList
+  style={styles.todosContainer}
+  data={filterTodos}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => (
+    <Pressable
+      style={styles.todoText}
+      onPress={() => navigate("TodoDetails", item)}
+    >
+      {/* {Platform.OS == "ios" ? (
+              <AntDesign name="checkcircle" size={24} color="black" />
+            ) : (
+              <AntDesign name="checkcircleo" size={24} color="black" />
+            )} */}
+
+      {item.completed ? (
+        <AntDesign
+          name="checkcircleo"
+          size={24}
+          color="green"
+          onPress={() => toggleState(item.id)}
+        />
+      ) : (
+        <AntDesign
+          name="closecircleo"
+          size={24}
+          color="red"
+          onPress={() => toggleState(item.id)}
+        />
+      )}
+      <Text>{item.title}</Text>
+      <View style={styles.edit}>
+        <Feather
+          name="trash"
+          size={24}
+          color="red"
+          onPress={() => deleteItem(item.id)}
+        />
+        <MaterialIcons name="edit" size={24} color="black" />
+      </View>
+    </Pressable>
+  )}
+/>;
+
+const addTodo = () => {
+  const obj = {
+    id: Date.now(),
+    title,
+    description,
+    completed: false,
+  };
+
+  if (title) {
+    setTodos([...todos, obj]);
+    setFilterTodos([...todos, obj]);
+  }
+
+  setDescription("");
+  setTitle("");
+};
+
+const toggleState = (id) => {
+  const itemIndex = todos.findIndex((element) => element.id === id);
+
+  if (itemIndex === -1) return;
+  const obj = { ...todos[itemIndex], completed: !todos[itemIndex].completed };
+
+  const allTodos = [...todos];
+  allTodos[itemIndex] = obj;
+  setTodos(allTodos);
+};
+
+// const storeData = async () => {
+//   try {
+//     await AsyncStorage.setItem("todos", JSON.stringify(todos));
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       const jsonvalue = await AsyncStorage.getItem("todos");
+//       if (jsonvalue !== null) {
+//         const storedTodos = JSON.parse(jsonvalue);
+//         setTodos(storedTodos);
+//         setFilterTodos(storedTodos);
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+//   fetchData();
+// }, []);
+
+// const deleteItem = (id) => {
+//   const newTodos = todos.filter((item) => item.id !== id);
+//   setTodos(newTodos);
+// };
+// useEffect(() => {
+//   setFilterTodos(todos);
+//   storeData();
+// }, [todos]);
